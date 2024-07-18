@@ -70,4 +70,14 @@ function OrderedMap:pairs()
   end
 end
 
+function OrderedMap:ripairs()
+  local index = self._length + 1
+  return function()
+    index = index - 1
+    if index > 0 then
+      return self._keys[index], self._values[index]
+    end
+  end
+end
+
 return OrderedMap

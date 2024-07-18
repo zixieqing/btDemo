@@ -2,6 +2,7 @@
 ---@class AStar
 
 local AStar = class("AStar")
+local OrderedMap = import('.third.OrderMap')
 local function heuristic(a, b)
     return math.abs(a.x - b.x) + math.abs(a.y - b.y)
 end
@@ -11,24 +12,25 @@ local function t2s(pos)
 end
 --string 转cc.p()
 local function s2t(tbl)
-    local newTbl = {}
-    for key, v in pairs(tbl) do
-        local keyData = string.split(key)
-        local newKey = cc.p(keyData[1], keyData[2])
-        newTbl[newKey] = v
+    local newTbl = OrderedMap:new()
+    for key, v in tbl:pairs() do
+        local keyData = string.split(key,"-")
+        local newKey = cc.p(tonumber(keyData[1]), tonumber(keyData[2]))
+        newTbl:set(newKey, v)
     end
     return newTbl
 end
 
----发现新的问题（没有按顺序排）
-
 function AStar:findPath(graph, start, goal)
+   
     local frontier = {}
     table.insert(frontier, {node = start, priority = 0})
 
-    local came_from = {}   --下个节点-上个节点 映射表
+    -- local came_from = {}   --下个节点-上个节点 映射表
+    local came_from = OrderedMap:new()
     local cost_so_far = {} --节点-实际代价 映射表
-    came_from[t2s(start)] = nil 
+    -- came_from[t2s(start)] = nil 
+    came_from:set(t2s(start), 0)
     cost_so_far[t2s(start)] = 0
 
     while table.nums(frontier) > 0 do
@@ -49,8 +51,8 @@ function AStar:findPath(graph, start, goal)
                     table.sort(frontier, function (a , b)
                         return a.priority < b.priority
                     end)
-                    print("current",current.x, current.y)
-                    came_from[t2s(next)] = current
+                    -- came_from[t2s(next)] = current
+                    came_from:set(t2s(next), current)
                 end
             end
         end

@@ -3,18 +3,17 @@ local GameScene = class("GameScene", function()
 end)
 local MapNode = import(".MapNode")
 local Player = import(".Player")
--- import(".FindPath")
 local AStar = import(".AStar")
-local OrderMap = import(".third.OrderMap")
+local OrderedMap = import(".third.OrderMap")
 
 function GameScene:ctor()
     self:enableNodeEvents()
-    performWithDelay(self, function()
+    -- performWithDelay(self, function()
         self:initVars()
         self:loadMap()
         self:loadPlayer()
         self:loadOtherUI()
-    end,0.5)
+    -- end,0.5)
     
 end
 
@@ -23,16 +22,8 @@ function GameScene:initVars()
     self.player = nil
     self.numCollected = 0
     self.scoreText = nil
-    --test
-    local orderMap = OrderMap:new()
-    orderMap:set("9-3",cc.p(8,8))
-    orderMap:set("9-4",cc.p(8,81))
-    orderMap:set("9-3",cc.p(81,81))
 
-    local a = orderMap:pairs()
-    for k, v in orderMap:pairs() do
-        print(k, v.x)
-    end
+
 end
 
 ----------------------------load UI ------------------------------
@@ -56,19 +47,47 @@ function GameScene:loadOtherUI()
     self.scoreText:setString("分数：0")
     self:addChild(self.scoreText)
 
+    self.curPosText = ccui.Text:create()
+    self.curPosText:setFontSize(20)
+    self.curPosText:setPosition(cc.p(display.cx, display.height - 30))
+    self.curPosText:setString("当前坐标：9,3")
+    self:addChild(self.curPosText)
+
+    self.destInput = ccui.EditBox:create(cc.size(100, 32), "quanxinMap/images/bg_black_gold.png",ccui.TextureResType.localType)
+    self.destInput:setReturnType(cc.KEYBOARD_RETURNTYPE_SEND)
+    self.destInput:setInputMode(cc.EDITBOX_INPUT_MODE_SINGLELINE)
+    self.destInput:setPosition(cc.p(display.width - 100, display.height - 50))
+    self:addChild(self.destInput)
+
     self.goDestBtn = ccui.Button:create("quanxinMap/images/Common_Btn_02.png")
     self.goDestBtn:setTitleText("到目标点")
     self.goDestBtn:addClickEventListener(function()
-        self:findPath()
+        local playerPos = self.mapNode:tileCoordForPosition(cc.p(self.player:getPosition()))
+        local goalPos = self:getGoalPos()
+        local start = playerPos or cc.p(9, 3)
+        local goal = goalPos or cc.p(11,8)
+        self:findPath(start, goal)
     end)
     self.goDestBtn:setPosition(cc.p(display.width - 100, display.height - 100))
     self:addChild(self.goDestBtn)
+
+
+    ---line node
+    local lineNode = cc.Node:create()
+    lineNode:addTo(self)
+
+    local drawNode = cc.DrawNode:create()
+    lineNode:addChild(drawNode)
+
+    self.lineNode = lineNode
+    self.drawNode = drawNode
+   
 end
 
 function GameScene:onEnter()
     self._touchListener = cc.EventListenerTouchOneByOne:create()
     self._touchListener:setEnabled(true)
-    self._touchListener:setSwallowTouches(true)
+    self._touchListener:setSwallowTouches(false)
     self._touchListener:registerScriptHandler(function(touch, event)
         return true
     end, cc.Handler.EVENT_TOUCH_BEGAN)
@@ -85,7 +104,8 @@ end
 function GameScene:onTouchEnded(touch, event)
     local touchLocation = touch:getLocation()
     touchLocation = self:convertToNodeSpace(touchLocation)
-
+    local gridPos = self.mapNode:tileCoordForPosition(touchLocation)
+    self.curPosText:setString(string.format("当前坐标:%s,%s",gridPos.x, gridPos.y))
     local playerPos = cc.p(self.player:getPosition())
     local diff = cc.pSub(touchLocation, playerPos)
     local tiledSize = self.mapNode:getTiledSize()
@@ -138,75 +158,59 @@ function GameScene:setPlayerPosition(position)
     self.player:setPosition(position)
 end
 
--- function GameScene:startFindPath()
---     local startX, startY = 2, 2
---     local endX, endY = 10, 10
---     local tileSize = self.mapNode:getTiledSize()
---     local grid = self.mapNode:getGrids()
---     -- 绘制寻路路径的函数
---     local function drawPath(map, path, tileSize)
---         local linePath = {}
---         for i, node in ipairs(path) do
---             local x = (node[1] - 1) * tileSize.width + tileSize.width / 2
---             local y = (node[2] - 1) * tileSize.height + tileSize.height / 2
---             table.insert(linePath, cc.p(x, y))
---         end
+function GameScene:findPath(start, goal)
 
---         local drawNode = cc.DrawNode:create()
---         drawNode:drawSegments(linePath, 2, cc.c4f(1, 0, 0, 1)) -- 红色线条
---         map:addChild(drawNode)
---     end
---         -- 使用示例
---     local path = findPath(startX, startY, endX, endY, grid)
---     if path then
---         drawPath(self.mapNode, path, tileSize)
---     else
---         print("无法找到路径")
---     end
--- end
+    local cameFromPath = AStar:findPath(self.mapNode, start, goal)
 
-function GameScene:findPath()
- 
-
-    -- 创建一个节点用于绘制线条
-    local lineNode = cc.Node:create()
-    lineNode:addTo(self)
-
-    -- 添加cc.DrawNode组件到lineNode节点上
-    local drawNode = cc.DrawNode:create()
-    lineNode:addChild(drawNode)
-
-    -- -- 绘制一条线条
-    -- local function drawLine()
-    --     drawNode:clear()
-    --     drawNode:drawLine(cc.p(100, 100), cc.p(300, 300), cc.c4f(1, 0, 0, 1)) -- 红色线条
-    -- end
-
-    -- -- 调用drawLine函数来绘制线条
-    -- drawLine()
-
-
-    local function drawPath(path)
-        drawNode:clear()
-    
-        if #path <= 1 then
-            return
+    --做进一步处理（过滤掉多余探索路径,最终得到一条唯一路径）
+    local uniqueRoute = OrderedMap.new()
+    local function filterRoute(goal)
+        if goal.x == start.x and goal.y == start.y then
+           return  
         end
-    
-        for i = 1, #path - 1 do
-            local start = path[i]
-            local goal = path[i + 1]
-            drawNode:drawLine(cc.p(start.x, start.y), cc.p(goal.x, goal.y), cc.c4f(1, 0, 0, 1)) -- 红色线条
+        for next, pre in cameFromPath:pairs() do
+            if next.x == goal.x and next.y == goal.y then
+                uniqueRoute:set(next, pre)
+                filterRoute(pre)
+                return 
+            end
         end
     end
 
-    local cameFromPath = AStar:findPath(self.mapNode, cc.p(9, 3), cc.p(11,8))
-    for k, v in pairs(cameFromPath) do
-        local printkv = string.format("next:x-y:%s-%s pre:x:%s, y:%s",k.x, k.y,v.x,v.y)
-        print(printkv)
-    end
-    drawPath(cameFromPath)
+    filterRoute(goal)
 
+    self:drawPath(uniqueRoute)
+end
+
+---画路径
+function GameScene:drawPath(path)
+    if table.nums(path) <= 1 then
+        return
+    end
+    self.drawNode:clear()
+    local i = 0
+    for next, pre in path:ripairs() do
+        i = i + 1
+        local start = self.mapNode:tp2cp(pre)
+        local goal =  self.mapNode:tp2cp(next)
+        self.drawNode:runAction(cc.Sequence:create(
+            cc.DelayTime:create(i * 0.5),
+            cc.CallFunc:create(function()
+                self.drawNode:drawLine(start, goal, cc.c4f(1, 0, 0, 1))
+                self.player:setPosition(goal)
+            end)
+        ))
+    end
+end
+
+function GameScene:getGoalPos()
+    if self.destInput:getText() == '' then
+       return nil 
+    end
+    local goalStr = string.gsub(self.destInput:getText(), "，", ",")
+    local input = string.split(goalStr,",")
+    local goalPos = cc.p(tonumber(input[1]), tonumber(input[2]))
+    return goalPos
 end
 
 return GameScene

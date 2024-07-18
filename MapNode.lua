@@ -1,10 +1,12 @@
 local MapNode = class("MapNode", function()
     return display.newNode()
 end)
+local GridNode = import('.GridNode')
 
 function MapNode:ctor()
     self:initMap()
     self:createGrid()
+    -- self:renderGrid()
 end
 
 function MapNode:initMap()
@@ -17,7 +19,11 @@ function MapNode:initMap()
 
     self.foods = self.tileMap:getLayer("food")
     self.blocks = self.tileMap:getLayer("block")
+
+    self.mapSize = self.tileMap:getMapSize()
+    self.tileSize = self.tileMap:getTileSize()
 end
+
 
 -- 创建网格数据
 function MapNode:createGrid()
@@ -37,6 +43,12 @@ function MapNode:createGrid()
     self.grid = grid
 end
 
+function MapNode:renderGrid()
+    local gridNode = GridNode:create(self.tileMap)
+    gridNode:setPosition(cc.p(0, 0))
+    self.tileMap:addChild(gridNode)
+end
+
 ------------------------get/set--------------------------------------
 function MapNode:getSpawnPoint()
     return self.spawnPos
@@ -44,11 +56,11 @@ end
 
 ---@return cc.size 地图的宽度和高度（以瓦片为单位）
 function MapNode:getMapSize()
-    return self.tileMap:getMapSize()
+    return self.mapSize
 end
 ---@return cc.Size 每个瓦片的尺寸
 function MapNode:getTiledSize()
-   return self.tileMap:getTileSize()
+   return self.tileSize
 end
 
 ---@return table 网格数据用于寻路
@@ -57,6 +69,9 @@ function MapNode:getGrids()
 end
 
 function MapNode:isBlock(tiledPos)
+    if self:isBorder(tiledPos) then
+        return true
+    end
     local tileGid = self.blocks:getTileGIDAt(tiledPos)
     if tileGid > 0 then
         -- local properties = self.tileMap:getPropertiesForGID(tileGid) -- 这个获取不到信息
@@ -70,6 +85,15 @@ function MapNode:isBlock(tiledPos)
         end
     end
     return false
+end
+
+function MapNode:isBorder(tiledPos)
+    local mapSize = self:getMapSize()
+    if tiledPos.x > mapSize.width  or tiledPos.y > mapSize.height or tiledPos.y < 0 or tiledPos.x < 0 then
+        return true
+    else
+        return false
+    end
 end
 
 function MapNode:isUseFood(tileCoord)
@@ -109,6 +133,17 @@ end
 function MapNode:cost(current, next)
     --目前先设置为1
     return 1
+end
+
+--- 格子坐标转cocos2dx坐标
+---@param vec2_table tiled格子坐标
+---@return vec2_table cocos 坐标
+function MapNode:tp2cp(gridPos)
+    local tileSize = self:getTiledSize()
+    local mapSize = self:getMapSize()
+    local x = gridPos.x * tileSize.width + tileSize.width/2
+    local y = (mapSize.height - gridPos.y) * tileSize.height - tileSize.height / 2
+    return cc.p(x, y)
 end
 
 return MapNode
