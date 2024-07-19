@@ -3,8 +3,9 @@ local GameScene = class("GameScene", function()
 end)
 local MapNode = import(".MapNode")
 local Player = import(".Player")
+local Monster = import(".Monster")
 local AStar = import(".AStar")
-local OrderedMap = import(".third.OrderMap")
+local BTree = import(".BTree")
 
 function GameScene:ctor()
     self:enableNodeEvents()
@@ -12,9 +13,11 @@ function GameScene:ctor()
         self:initVars()
         self:loadMap()
         self:loadPlayer()
+        self:loadMonster()
         self:loadOtherUI()
+        self:loadTree()
     -- end,0.5)
-    
+    _g_scene = self
 end
 
 function GameScene:initVars()
@@ -22,8 +25,8 @@ function GameScene:initVars()
     self.player = nil
     self.numCollected = 0
     self.scoreText = nil
-
-
+    self.monsters = {}
+    self.isOpenAI = false
 end
 
 ----------------------------load UI ------------------------------
@@ -34,10 +37,20 @@ function GameScene:loadMap()
 end
 
 function GameScene:loadPlayer()
-    self.player = Player.new()
+    self.player = Player.new(self)
     self:addChild(self.player)
     local spawnPoint = self.mapNode:getSpawnPoint()
     self.player:setPosition(spawnPoint)
+end
+
+function GameScene:loadMonster()
+    local monsterCnt = 1
+    for i = 1, monsterCnt do
+        local monster = Monster.new()
+        self:addChild(monster)
+        monster:setPosition(cc.p(math.random(0,600),math.random(0,600)))
+        table.insert(self.monsters,monster)
+    end
 end
 
 function GameScene:loadOtherUI()
@@ -46,6 +59,9 @@ function GameScene:loadOtherUI()
     self.scoreText:setPosition(cc.p(display.cx, display.cy))
     self.scoreText:setString("分数：0")
     self:addChild(self.scoreText)
+
+    self.touchLayer = cc.Layer:create()
+    self:addChild(self.touchLayer)
 
     self.curPosText = ccui.Text:create()
     self.curPosText:setFontSize(20)
@@ -59,17 +75,28 @@ function GameScene:loadOtherUI()
     self.destInput:setPosition(cc.p(display.width - 100, display.height - 50))
     self:addChild(self.destInput)
 
-    self.goDestBtn = ccui.Button:create("quanxinMap/images/Common_Btn_02.png")
-    self.goDestBtn:setTitleText("到目标点")
-    self.goDestBtn:addClickEventListener(function()
-        local playerPos = self.mapNode:tileCoordForPosition(cc.p(self.player:getPosition()))
+    local goBtn = ccui.Button:create("quanxinMap/images/Common_Btn_02.png")
+    goBtn:setTitleText("到目标点")
+    goBtn:addClickEventListener(function()
+        local playerPos = self.mapNode:cp2tp(cc.p(self.player:getPosition()))
         local goalPos = self:getGoalPos()
         local start = playerPos or cc.p(9, 3)
         local goal = goalPos or cc.p(11,8)
         self:findPath(start, goal)
     end)
-    self.goDestBtn:setPosition(cc.p(display.width - 100, display.height - 100))
-    self:addChild(self.goDestBtn)
+    goBtn:setPosition(cc.p(display.width - 100, display.height - 100))
+    self:addChild(goBtn)
+
+    local heroAI = ccui.Button:create("quanxinMap/images/Common_Btn_02.png")
+    heroAI:setTitleText("开启角色AI")
+    heroAI:addClickEventListener(function()
+        self.tree:setCtxTime(0)
+        self.isOpenAI = not self.isOpenAI
+        local title = self.isOpenAI == true and "关闭角色AI" or "开启角色AI"
+        heroAI:setTitleText(title)
+    end)
+    heroAI:setPosition(cc.p(display.width - 100, display.height - 300))
+    self:addChild(heroAI)
 
 
     ---line node
@@ -84,6 +111,11 @@ function GameScene:loadOtherUI()
    
 end
 
+function GameScene:loadTree(...)
+    local avatars = {hero = self.player, monster = self.monsters[1]}
+    self.tree = BTree.new(avatars)
+end
+
 function GameScene:onEnter()
     self._touchListener = cc.EventListenerTouchOneByOne:create()
     self._touchListener:setEnabled(true)
@@ -94,17 +126,31 @@ function GameScene:onEnter()
     self._touchListener:registerScriptHandler(function()
     end, cc.Handler.EVENT_TOUCH_MOVED)
     self._touchListener:registerScriptHandler(handler(self, self.onTouchEnded), cc.Handler.EVENT_TOUCH_ENDED)
-    cc.Director:getInstance():getEventDispatcher():addEventListenerWithSceneGraphPriority(self._touchListener, self)
+    cc.Director:getInstance():getEventDispatcher():addEventListenerWithSceneGraphPriority(self._touchListener, self.touchLayer)
+
+    self:scheduleUpdateWithPriorityLua(handler(self, self.onUpdate), 0)
+
 end
 
-function GameScene:onUpdate()
-   
+local acc = 0
+function GameScene:onUpdate(dt)
+   if self.isOpenAI then
+        acc = acc + dt 
+        if acc > 1 then
+            acc = 0
+            self.tree:setCtxTime(self.tree:getCtxTime() + 1)
+            local ret = self.tree:getHeroTree():run()
+            if ret == "SUCCESS" then
+                print("TREE is RUN AROUND")
+            end
+        end
+   end
 end
 
 function GameScene:onTouchEnded(touch, event)
     local touchLocation = touch:getLocation()
     touchLocation = self:convertToNodeSpace(touchLocation)
-    local gridPos = self.mapNode:tileCoordForPosition(touchLocation)
+    local gridPos = self.mapNode:cp2tp(touchLocation)
     self.curPosText:setString(string.format("当前坐标:%s,%s",gridPos.x, gridPos.y))
     local playerPos = cc.p(self.player:getPosition())
     local diff = cc.pSub(touchLocation, playerPos)
@@ -130,7 +176,7 @@ function GameScene:onTouchEnded(touch, event)
        playerPos.x >= 0 then
         self:setPlayerPosition(playerPos)
     end
-    self:setViewpointCenter(cc.p(self.player:getPosition()))
+    -- self:setViewpointCenter(cc.p(self.player:getPosition()))
 end
 
 function GameScene:setViewpointCenter(position)
@@ -146,7 +192,7 @@ function GameScene:setViewpointCenter(position)
 end
 
 function GameScene:setPlayerPosition(position)
-    local tiledPos = self.mapNode:tileCoordForPosition(position)
+    local tiledPos = self.mapNode:cp2tp(position)
     local isBlock = self.mapNode:isBlock(tiledPos)
     if isBlock then return end
     local isUseFood =  self.mapNode:isUseFood(tiledPos)
@@ -159,27 +205,12 @@ function GameScene:setPlayerPosition(position)
 end
 
 function GameScene:findPath(start, goal)
-
-    local cameFromPath = AStar:findPath(self.mapNode, start, goal)
-
-    --做进一步处理（过滤掉多余探索路径,最终得到一条唯一路径）
-    local uniqueRoute = OrderedMap.new()
-    local function filterRoute(goal)
-        if goal.x == start.x and goal.y == start.y then
-           return  
-        end
-        for next, pre in cameFromPath:pairs() do
-            if next.x == goal.x and next.y == goal.y then
-                uniqueRoute:set(next, pre)
-                filterRoute(pre)
-                return 
-            end
-        end
+    if self.mapNode:isBlock(goal) then 
+        print("目标点为阻挡点，或已超过地图范围")
+        return 
     end
-
-    filterRoute(goal)
-
-    self:drawPath(uniqueRoute)
+    local cameFromPath = AStar:findPath(self.mapNode, start, goal)
+    self:drawPath(cameFromPath)
 end
 
 ---画路径
@@ -189,6 +220,7 @@ function GameScene:drawPath(path)
     end
     self.drawNode:clear()
     local i = 0
+    local count = 0
     for next, pre in path:ripairs() do
         i = i + 1
         local start = self.mapNode:tp2cp(pre)
@@ -198,6 +230,10 @@ function GameScene:drawPath(path)
             cc.CallFunc:create(function()
                 self.drawNode:drawLine(start, goal, cc.c4f(1, 0, 0, 1))
                 self.player:setPosition(goal)
+                count = count + 1
+                if count == path:length() then
+                    self.drawNode:clear()
+                end
             end)
         ))
     end

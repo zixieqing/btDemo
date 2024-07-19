@@ -5,7 +5,6 @@ local GridNode = import('.GridNode')
 
 function MapNode:ctor()
     self:initMap()
-    self:createGrid()
     -- self:renderGrid()
 end
 
@@ -22,25 +21,6 @@ function MapNode:initMap()
 
     self.mapSize = self.tileMap:getMapSize()
     self.tileSize = self.tileMap:getTileSize()
-end
-
-
--- 创建网格数据
-function MapNode:createGrid()
-    local mapWidth = self.tileMap:getMapSize().width
-    local mapHeight = self.tileMap:getMapSize().height
-    local grid = {}
-    for y = 1, mapHeight do
-        grid[y] = {}
-        for x = 1, mapWidth do
-            if self:isBlock(cc.p(x - 1, y - 1)) then
-                grid[y][x] = 1 --不可通过
-            else
-                grid[y][x] = 0 -- 可通过
-            end
-        end
-    end
-    self.grid = grid
 end
 
 function MapNode:renderGrid()
@@ -63,13 +43,9 @@ function MapNode:getTiledSize()
    return self.tileSize
 end
 
----@return table 网格数据用于寻路
-function MapNode:getGrids()
-    return self.grid
-end
-
 function MapNode:isBlock(tiledPos)
     if self:isBorder(tiledPos) then
+        print("坐标已超过地图边界")
         return true
     end
     local tileGid = self.blocks:getTileGIDAt(tiledPos)
@@ -112,14 +88,6 @@ function MapNode:useFood(tileCoord)
     self.foods:removeTileAt(tileCoord)
 end
 
----@param position vec2_table cocos坐标
----@return tiledMap 地图块坐标
-function MapNode:tileCoordForPosition(position)
-    local x = math.floor(position.x / self.tileMap:getTileSize().width)
-    local y = math.floor((self.tileMap:getMapSize().height * self.tileMap:getTileSize().height - position.y) / self.tileMap:getTileSize().height)
-    return cc.p(x, y)
-end
-
 function MapNode:neighbors(node)
     local x, y = node.x, node.y
     local neighbors = {
@@ -136,13 +104,22 @@ function MapNode:cost(current, next)
 end
 
 --- 格子坐标转cocos2dx坐标
----@param vec2_table tiled格子坐标
+---@param vec2_table gridPos tiled格子坐标
 ---@return vec2_table cocos 坐标
 function MapNode:tp2cp(gridPos)
     local tileSize = self:getTiledSize()
     local mapSize = self:getMapSize()
     local x = gridPos.x * tileSize.width + tileSize.width/2
     local y = (mapSize.height - gridPos.y) * tileSize.height - tileSize.height / 2
+    return cc.p(x, y)
+end
+
+---cocos坐标转tiledMap格子坐标
+---@param position vec2_table cocos坐标
+---@return tiledMap 地图块坐标
+function MapNode:cp2tp(position)
+    local x = math.floor(position.x / self.tileMap:getTileSize().width)
+    local y = math.floor((self.tileMap:getMapSize().height * self.tileMap:getTileSize().height - position.y) / self.tileMap:getTileSize().height)
     return cc.p(x, y)
 end
 
