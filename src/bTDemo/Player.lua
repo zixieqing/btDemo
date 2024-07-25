@@ -50,7 +50,7 @@ function Player:setHP(hp)
     self.hp = hp
 end
 function Player:findPath(start, goal)
--- 问题：怪物与英雄同时移动时，终点值一直在变动，每次都使用寻路，性能开销较大，且无法追上怪物
+
     if not self.cameFromPath then
         start = _g_scene.mapNode:cp2tp(start)
         goal = _g_scene.mapNode:cp2tp(goal)
@@ -67,12 +67,13 @@ function Player:findPath(start, goal)
         if cur.x == self.curStep.x and cur.y == self.curStep.y then
             self:setPosition(_g_scene.mapNode:tp2cp(next))
             self.curStep = next
-            if self.curStep.x == goal.x and self.curStep.y == goal.y then
-                print("arrive goal")
-            end
             return 
         end
     end
+end
+
+function Player:findPathFinish()
+    self.cameFromPath = nil
 end
 
 function Player:attack()
@@ -81,7 +82,7 @@ end
 
 function Player:getAckDamage()
     local criticalHit = math.random()
-    return self.baseDamge * (1 + criticalHit)
+    return self.baseDamge * (5 + criticalHit)
 end
 
 function Player:takeDamage(damage)

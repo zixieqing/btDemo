@@ -24,17 +24,20 @@ local M = {
 }
 local direction = 1
 function M.run(node, env)
-    local owner = env.owner
-    owner.x = owner.x + node.args.speed * direction * 0.016
-    if owner.x < 0 then
-        owner.x = 0
-        direction = 1
-    elseif owner.x > 900 then
-        owner.x = 900
-        direction = -1 
-    end
-    owner:setPosition(cc.p(owner.x, owner.y))
-    return node:yield(env)
+    -- local owner = env.owner
+    -- owner.x = owner.x + node.args.speed * direction * 0.016
+    -- if owner.x < 0 then
+    --     owner.x = 0
+    --     direction = 1
+    -- elseif owner.x > 900 then
+    --     owner.x = 900
+    --     direction = -1 
+    -- end
+    -- owner:setPosition(cc.p(owner.x, owner.y))
+    -- return node:yield(env)
+
+    --暂时先不巡逻了
+    return bret.SUCCESS
 end
 
 return M

@@ -45,7 +45,9 @@ function M.run(node, env)
         local isRect = math.abs(x - tx) <= w and math.abs(y - ty) <= h
         return isRect
     end, args.count)
-
+    if #list == 0 then
+        return bret.FAIL
+    end
     local enemy = list[1]
     return ret(enemy), enemy
 end

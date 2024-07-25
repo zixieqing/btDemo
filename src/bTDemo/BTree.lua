@@ -21,12 +21,12 @@ function BTree:loadTrees()
     local ctx = self:genContext()
     self.playerTree = behavior_tree.new("hero", self:loadTree("workspace/trees/hero.json"), {
         ctx   = ctx,
-        owner = self.hero,
+        owner = ctx.avatars[1],
     })
-    for _, monster in pairs(self.monsters) do
+    for index, monster in pairs(self.monsters) do
         local monsterTree = behavior_tree.new("monster", self:loadTree("workspace/trees/monster.json"), {
             ctx   = ctx,
-            owner = monster,
+            owner = ctx.avatars[1 + index],
         })
         table.insert(self.monstersTree, monsterTree)
     end
@@ -73,9 +73,9 @@ function BTree:genContext()
         return list
     end
     function ctx:remove(target) --移除
-        for _, avatar in pairs(ctx.avatars) do
+        for index, avatar in pairs(ctx.avatars) do
             if target == avatar then
-                table.remove(ctx.avatars, avatar)
+                table.remove(ctx.avatars, index)
             end
         end
     end

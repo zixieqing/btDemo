@@ -16,6 +16,7 @@ function M.run(node, env)
     print "Do Dead"
     env.ctx:remove(owner)
     owner:dead()
+    env.owner = nil
     return bret.ABORT
 end
 

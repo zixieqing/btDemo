@@ -29,7 +29,6 @@ return {
 
     ---custom 自定义节点
     FindEnemy = require "myGame.conditions.find_enemy",
-    IsDead = require "myGame.conditions.is_dead",
     CheckHP     = require "myGame.conditions.check_hp",
 
     DeadHandle = require "myGame.actions.dead_handle",

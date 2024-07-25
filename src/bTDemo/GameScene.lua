@@ -49,11 +49,12 @@ function GameScene:loadPlayer()
 end
 
 function GameScene:loadMonster()
-    local monsterCnt = 1
+    local monsterCnt = 2
+    math.randomseed(os.time())
     for i = 1, monsterCnt do
         local monster = Monster.new()
         self:addChild(monster)
-        monster:setPosition(cc.p(math.random(0,600),math.random(0,600)))
+        monster:setPosition(cc.p(math.random(100,600),math.random(100,600)))
         table.insert(self.monsters,monster)
     end
 end
@@ -229,7 +230,7 @@ function GameScene:findPath(start, goal)
     -- local cameFromPath = BFS:findPath(self.mapNode, start, goal) -- BFS
     -- local cameFromPath = Dijkstra:findPath(self.mapNode, start, goal) -- Dijkstra
     -- local cameFromPath = GBFS:findPath(self.mapNode, start, goal) -- GBFS
-    -- local cameFromPath = BStar:findPath(self.mapNode, start, goal)
+    -- local cameFromPath = BStar:findPath(self.mapNode, start, goal) -- 目前对比无差别
     self:drawPath(cameFromPath)
 end
 
@@ -241,14 +242,14 @@ function GameScene:drawPath(path)
     self.drawNode:clear()
     local i = 0
     local count = 0
-    for next, pre in path:pairs() do --debug 使用看寻路过程
-    -- for next, pre in path:ripairs() do
+    -- for next, pre in path:pairs() do --debug 使用看寻路过程
+    for next, pre in path:ripairs() do
         if type(pre) == "table" then
             i = i + 1
             local start = self.mapNode:tp2cp(pre)
             local goal =  self.mapNode:tp2cp(next)
             self.drawNode:runAction(cc.Sequence:create(
-                cc.DelayTime:create(i * 0.1),
+                cc.DelayTime:create(i * 0.01),
                 cc.CallFunc:create(function()
                     self.drawNode:drawLine(start, goal, cc.c4f(1, 0, 0, 1))
                     self.player:setPosition(goal)

@@ -80,23 +80,23 @@ function AStar:findPath(graph, start, goal)
     local new_came_from = s2t(came_from)
 
     -- --做进一步处理（过滤掉多余探索路径,最终得到一条唯一路径）
-    -- local uniqueRoute = OrderedMap.new()
-    -- local function filterRoute(goal)
-    --     if goal.x == start.x and goal.y == start.y then
-    --         return  
-    --     end
-    --     for next, pre in new_came_from:pairs() do
-    --         if next.x == goal.x and next.y == goal.y then
-    --             uniqueRoute:set(next, pre)
-    --             filterRoute(pre)
-    --             return 
-    --         end
-    --     end
-    -- end
+    local uniqueRoute = OrderedMap.new()
+    local function filterRoute(goal)
+        if goal.x == start.x and goal.y == start.y then
+            return  
+        end
+        for next, pre in new_came_from:pairs() do
+            if next.x == goal.x and next.y == goal.y then
+                uniqueRoute:set(next, pre)
+                filterRoute(pre)
+                return 
+            end
+        end
+    end
 
-    -- filterRoute(goal)
+    filterRoute(goal)
 
-    return new_came_from, cost_so_far
+    return uniqueRoute, cost_so_far
 end
 
 return AStar

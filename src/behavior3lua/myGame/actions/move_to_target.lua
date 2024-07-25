@@ -26,6 +26,7 @@ function M.run(node, env, target)
 
     if abs(x - tx) < SPEED and abs(y - ty) < SPEED  then
         print("Moving reach target")
+        owner:findPathFinish()
         return bret.SUCCESS
     end
 

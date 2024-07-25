@@ -35,11 +35,22 @@ end
 
 function Monster:takeDamage(damage)
     self.hp = self.hp - damage
+    if self.hp < 0 then
+       self.hp = 0 
+    end
     self.hpNode:reduceHP(self.hp)
 end
 
 function Monster:dead()
     self:removeFromParent()
+end
+
+function Monster:attack()
+    print("Monster Attack")
+end
+
+function Monster:getAckDamage()
+    return 1
 end
 
 return Monster
