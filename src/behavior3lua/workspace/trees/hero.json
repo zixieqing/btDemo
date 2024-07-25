@@ -1,0 +1,80 @@
+{
+  "name": "hero",
+  "root": {
+    "id": 1,
+    "name": "Selector",
+    "children": [
+      {
+        "id": 2,
+        "name": "Sequence",
+        "desc": "血量低回家",
+        "children": [
+          {
+            "id": 3,
+            "name": "CheckHP",
+            "args": {
+              "hp": 0,
+              "condition": "="
+            }
+          },
+          {
+            "id": 4,
+            "name": "ReturnToSpawn"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "name": "Sequence",
+        "desc": "找怪攻击",
+        "children": [
+          {
+            "id": 6,
+            "name": "FindEnemy",
+            "args": {
+              "w": 16,
+              "h": 16
+            },
+            "output": [
+              "enemy"
+            ]
+          },
+          {
+            "id": 7,
+            "name": "Attack",
+            "input": [
+              "enemy"
+            ]
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "name": "Sequence",
+        "desc": "移动",
+        "children": [
+          {
+            "id": 9,
+            "name": "FindEnemy",
+            "args": {
+              "w": 200,
+              "h": 200
+            },
+            "output": [
+              "enemy"
+            ]
+          },
+          {
+            "id": 10,
+            "name": "MoveToTarget",
+            "input": [
+              "enemy"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "export": true,
+  "desc": ""
+}

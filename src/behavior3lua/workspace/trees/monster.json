@@ -1,0 +1,64 @@
+{
+  "name": "monster",
+  "root": {
+    "id": 1,
+    "name": "Selector",
+    "children": [
+      {
+        "id": 2,
+        "name": "Sequence",
+        "desc": "死亡处理",
+        "children": [
+          {
+            "id": 3,
+            "name": "CheckHP",
+            "args": {
+              "hp": 0,
+              "condition": "="
+            }
+          },
+          {
+            "id": 4,
+            "name": "DeadHandle"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "name": "Sequence",
+        "desc": "发现周围有敌人",
+        "children": [
+          {
+            "id": 6,
+            "name": "FindEnemy",
+            "args": {
+              "w": 16,
+              "h": 16
+            },
+            "output": [
+              "enemy"
+            ]
+          },
+          {
+            "id": 7,
+            "name": "Attack",
+            "input": [
+              "enemy"
+            ]
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "name": "Patrol",
+        "args": {
+          "w": 600,
+          "h": 600,
+          "speed": 500
+        }
+      }
+    ]
+  },
+  "export": true,
+  "desc": ""
+}
