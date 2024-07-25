@@ -101,3 +101,68 @@ lua54 export_node.lua
 -- 编辑器无法对已经生成树就行交换，移动编辑
 
 ### 难点
+
+
+### 流程
+tree:
+```lua
+tree:run()--运行行为树
+if #env.stack > 0  then   --通过栈来记录上次运行的，可以继续进行运行
+   local last_node = env.stack[#env.stack] 
+else
+   self:dispatch(env, behavior_event.BEFORE_RUN)
+   last_ret = self.root:run(env) -- 空栈从Root节点就行运行
+end
+
+```
+看看这个栈是如何进行维护的？
+--node
+
+```lua
+function node:run()
+
+   if env:get_inner_var(self, "YIELD") == nil then  --每次判断当前节点YIELD里没有值（什么情况下有值呢？ 正在运行的节点） ，就入栈
+      env:push_stack(self)
+   end
+
+   local vars = {}
+   for i, var_name in ipairs(self.data.input or {}) do
+      vars[i] = env:get_var(var_name)
+   end
+   assert(process[self.name], self.name)
+   local func = assert(process[self.name].run, self.name)
+   local ok, errmsg = xpcall(function()
+      if self.data.input then
+            vars = table.pack(func(self, env, table.unpack(vars, 1, #self.data.input)))
+      else
+            vars = table.pack(func(self, env, table.unpack(vars)))
+      end
+   end, debug.traceback)
+
+   if not ok then
+      error(sformat("node %s run error:%s", self.info, errmsg))
+   end
+
+   local ret = vars[1]
+   assert(ret, self.info)
+
+   if ret ~= bret.RUNNING then
+      for i, var_name in ipairs(self.data.output or {}) do
+            env:set_var(var_name, vars[i + 1])
+      end
+      env:set_inner_var(self, "YIELD", nil)
+      env:pop_stack()                              --这里如果不是正在运行的，就出栈；正在运行的节点就留在栈里了，这样下次重新运行节点树时，就直接跳到RUNNING 的节点了
+   elseif env:get_inner_var(self, "YIELD") == nil then
+      env:set_inner_var(self, "YIELD", true)
+   end
+
+   env.last_ret = ret
+   --print("fini", self.name, self.node_id, table.unpack(vars, 1, #self.data.input))
+
+   if self.data.debug then
+      debugger(self, env, ret)
+   end
+   return ret
+end
+
+```

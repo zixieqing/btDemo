@@ -15,7 +15,7 @@ local behavior_event = require 'behavior3.behavior_event'
 ---@field run? fun(node:BehaviorNode, env:BehaviorEnv, ...): BehaviorRet, ...
 local meta = {
     __newindex = function(_, k)
-        error(string.format('readonly:%s', k), 2)
+        print(string.format('readonly:%s', k), 2)
     end
 }
 local function const(t)

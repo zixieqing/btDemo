@@ -15,6 +15,7 @@ function Player:ctor()
 end
 function Player:initVars()
     self.cameFromPath = nil
+    self.startTime = 0
 end
 
 function Player:createHPNode()
@@ -90,8 +91,8 @@ function Player:takeDamage(damage)
     self.hpNode:reduceHP(self.hp)
 end
 
-function Player:IsDead()
-
+function Player:sing()
+    print("玩家正在唱歌")
 end
 
 return Player

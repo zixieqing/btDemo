@@ -4,13 +4,14 @@
 local bret = require "behavior3.behavior_ret"
 
 local M = {
-    name = "Idle",
+    name = "FindFood",
     type = "Action",
-    desc = "休息",
+    desc = "找食物",
+    output = {"{目标食物}"},
 }
 
 function M.run(node, env)
-    print "Do Idle"
+    print "FindFood"
     return bret.SUCCESS
 end
 

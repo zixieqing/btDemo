@@ -1,314 +1,336 @@
 [
   {
-    "doc": "+ 只能有一个子节点,多个仅执行第一个\n+ 不管子节点是否成功都返回失败\n",
     "desc": "始终返回失败",
-    "type": "Decorator",
-    "name": "AlwaysFail"
+    "doc": "+ 只能有一个子节点,多个仅执行第一个\n+ 不管子节点是否成功都返回失败\n",
+    "name": "AlwaysFail",
+    "type": "Decorator"
   },
   {
-    "doc": "+ 只能有一个子节点,多个仅执行第一个\n+ 不管子节点是否成功都返回成功\n",
     "desc": "始终返回成功",
-    "type": "Decorator",
-    "name": "AlwaysSuccess"
+    "doc": "+ 只能有一个子节点,多个仅执行第一个\n+ 不管子节点是否成功都返回成功\n",
+    "name": "AlwaysSuccess",
+    "type": "Decorator"
   },
   {
     "desc": "攻击",
-    "type": "Action",
-    "name": "Attack",
     "input": [
       "{目标}"
-    ]
+    ],
+    "name": "Attack",
+    "type": "Action"
   },
   {
-    "doc": "+ 做简单数值公式判定，返回成功或失败\n",
-    "desc": "检查True或False",
     "args": [
       {
-        "type": "code?",
+        "desc": "值",
         "name": "value",
-        "desc": "值"
+        "type": "code?"
       }
     ],
-    "type": "Condition",
-    "name": "Check"
+    "desc": "检查True或False",
+    "doc": "+ 做简单数值公式判定，返回成功或失败\n",
+    "name": "Check",
+    "type": "Condition"
   },
   {
-    "doc": "当输入>时；即参数hp大于对象,返回success,否则就fail\n",
-    "desc": "比较对象HP、参数值HP",
     "args": [
       {
-        "type": "int?",
+        "desc": "hp",
         "name": "hp",
-        "desc": "hp"
+        "type": "int?"
       },
       {
-        "type": "string?",
+        "desc": "条件：输入 > ; < ; =",
         "name": "condition",
-        "desc": "条件：输入 > ; < ; ="
+        "type": "string?"
       }
     ],
-    "type": "Condition",
-    "name": "CheckHP"
+    "desc": "比较对象HP、参数值HP",
+    "doc": "当输入>时；即参数hp大于对象,返回success,否则就fail\n",
+    "name": "CheckHP",
+    "type": "Condition"
   },
   {
     "desc": "清除变量",
+    "name": "Clear",
     "output": [
       "清除的变量名"
     ],
-    "type": "Action",
-    "name": "Clear"
+    "type": "Action"
   },
   {
-    "doc": "+ 若值为空，返回失败\n+ 非整数类型可能会报错\n",
-    "desc": "比较值大小",
     "args": [
       {
-        "type": "code?",
+        "desc": "值",
         "name": "value",
-        "desc": "值"
+        "type": "code?"
       },
       {
-        "type": "int?",
+        "desc": ">",
         "name": "gt",
-        "desc": ">"
+        "type": "int?"
       },
       {
-        "type": "int?",
+        "desc": ">=",
         "name": "ge",
-        "desc": ">="
+        "type": "int?"
       },
       {
-        "type": "int?",
+        "desc": "==",
         "name": "eq",
-        "desc": "=="
+        "type": "int?"
       },
       {
-        "type": "int?",
+        "desc": "<=",
         "name": "le",
-        "desc": "<="
+        "type": "int?"
       },
       {
-        "type": "int?",
+        "desc": "<",
         "name": "lt",
-        "desc": "<"
+        "type": "int?"
       }
     ],
-    "type": "Condition",
-    "name": "Cmp",
+    "desc": "比较值大小",
+    "doc": "+ 若值为空，返回失败\n+ 非整数类型可能会报错\n",
     "input": [
       "值(int)"
-    ]
+    ],
+    "name": "Cmp",
+    "type": "Condition"
   },
   {
-    "doc": "终止行为树，移除怪物\n",
     "desc": "死亡处理",
-    "type": "Action",
-    "name": "DeadHandle"
+    "doc": "终止行为树，移除怪物\n",
+    "name": "DeadHandle",
+    "type": "Action"
   },
   {
-    "doc": "+ 没找到返回失败\n",
+    "desc": "吃食物",
+    "input": [
+      "{目标食物}"
+    ],
+    "name": "EatFood",
+    "type": "Action"
+  },
+  {
+    "args": [
+      {
+        "desc": "宽",
+        "name": "w",
+        "type": "int?"
+      },
+      {
+        "desc": "高",
+        "name": "h",
+        "type": "int?"
+      },
+      {
+        "desc": "查找上限",
+        "name": "count",
+        "type": "string?"
+      }
+    ],
     "desc": "在范围内查找敌人",
+    "doc": "+ 没找到返回失败\n",
+    "name": "FindEnemy",
     "output": [
       "目标单位"
     ],
-    "args": [
-      {
-        "type": "int?",
-        "name": "w",
-        "desc": "宽"
-      },
-      {
-        "type": "int?",
-        "name": "h",
-        "desc": "高"
-      },
-      {
-        "type": "string?",
-        "name": "count",
-        "desc": "查找上限"
-      }
-    ],
-    "type": "Condition",
-    "name": "FindEnemy"
+    "type": "Condition"
   },
   {
-    "doc": "+ 只能有一个子节点，多个仅执行第一个\n+ 每次执行子节点前会设置当前遍历到的变量\n+ 当子节点返回失败时，退出遍历并返回失败状态\n+ 其它情况返回成功/正在运行\n",
+    "desc": "找食物",
+    "name": "FindFood",
+    "output": [
+      "{目标食物}"
+    ],
+    "type": "Action"
+  },
+  {
     "desc": "遍历数组",
+    "doc": "+ 只能有一个子节点，多个仅执行第一个\n+ 每次执行子节点前会设置当前遍历到的变量\n+ 当子节点返回失败时，退出遍历并返回失败状态\n+ 其它情况返回成功/正在运行\n",
+    "input": [
+      "[{数组}]"
+    ],
+    "name": "ForEach",
     "output": [
       "{变量}"
     ],
-    "type": "Action",
-    "name": "ForEach",
-    "input": [
-      "[{数组}]"
-    ]
+    "type": "Action"
   },
   {
-    "desc": "待机",
-    "type": "Action",
-    "name": "Idle"
+    "desc": "休息",
+    "name": "Idle",
+    "type": "Action"
   },
   {
-    "doc": "+ 拥有三个子节点(至少两个)\n+ 当第一个子节点返回SUCCESS的时候执行第二个子节点并返回此子节点的返回值\n+ 否则执行第三个子节点并返回这个节点的返回值,若无第三个子节点,则返回FAIL\n",
     "desc": "If判断",
-    "type": "Composite",
-    "name": "IfElse"
+    "doc": "+ 拥有三个子节点(至少两个)\n+ 当第一个子节点返回SUCCESS的时候执行第二个子节点并返回此子节点的返回值\n+ 否则执行第三个子节点并返回这个节点的返回值,若无第三个子节点,则返回FAIL\n",
+    "name": "IfElse",
+    "type": "Composite"
   },
   {
-    "doc": "+ 死亡，HandleDeath\n- 没死，走下一步即可\n",
-    "desc": "是否死亡",
-    "type": "Condition",
-    "name": "IsDead"
-  },
-  {
-    "desc": "打印日志",
     "args": [
       {
-        "type": "string",
+        "desc": "日志",
         "name": "message",
-        "desc": "日志"
+        "type": "string"
       }
     ],
-    "type": "Action",
-    "name": "Log"
+    "desc": "打印日志",
+    "name": "Log",
+    "type": "Action"
   },
   {
-    "doc": "+ 只能有一个子节点，多个仅执行第一个\n+ 当子节点返回「失败」时，退出遍历并返回「失败」状态\n+ 其它情况返回成功/正在运行\n",
-    "desc": "循环执行",
     "args": [
       {
-        "type": "int?",
+        "desc": "次数",
         "name": "count",
-        "desc": "次数"
+        "type": "int?"
       }
     ],
-    "type": "Action",
-    "name": "Loop",
+    "desc": "循环执行",
+    "doc": "+ 只能有一个子节点，多个仅执行第一个\n+ 当子节点返回「失败」时，退出遍历并返回「失败」状态\n+ 其它情况返回成功/正在运行\n",
     "input": [
       "次数(int)?"
-    ]
+    ],
+    "name": "Loop",
+    "type": "Action"
   },
   {
     "desc": "移动到目标",
-    "type": "Action",
-    "name": "MoveToTarget",
     "input": [
       "{目标}"
-    ]
+    ],
+    "name": "MoveToTarget",
+    "type": "Action"
   },
   {
-    "doc": "+ 将子节点的返回值取反\n",
     "desc": "取反",
-    "type": "Decorator",
-    "name": "Not"
+    "doc": "+ 将子节点的返回值取反\n",
+    "name": "Not",
+    "type": "Decorator"
   },
   {
-    "doc": "+ 将子节点的返回值取反\n",
     "desc": "取反",
-    "type": "Decorator",
-    "name": "Not"
+    "doc": "+ 将子节点的返回值取反\n",
+    "name": "Not",
+    "type": "Decorator"
   },
   {
     "desc": "获取当前时间",
+    "name": "Now",
     "output": [
       "当前时间"
     ],
-    "type": "Action",
-    "name": "Now"
+    "type": "Action"
   },
   {
-    "doc": "+ 只能有一个子节点,多个仅执行第一个\n+ 被打断后该节点后的子节点依旧不会执行\n+ 该节点执行后永远返回成功\n",
     "desc": "只执行一次",
-    "type": "Decorator",
-    "name": "Once"
+    "doc": "+ 只能有一个子节点,多个仅执行第一个\n+ 被打断后该节点后的子节点依旧不会执行\n+ 该节点执行后永远返回成功\n",
+    "name": "Once",
+    "type": "Decorator"
   },
   {
-    "doc": "执行所有子节点并返回成功\n",
     "desc": "并行执行",
-    "type": "Composite",
-    "name": "Parallel"
+    "doc": "执行所有子节点并返回成功\n",
+    "name": "Parallel",
+    "type": "Composite"
   },
   {
-    "desc": "在一定范围内巡逻",
     "args": [
       {
-        "type": "int?",
+        "desc": "宽",
         "name": "w",
-        "desc": "宽"
+        "type": "int?"
       },
       {
-        "type": "int?",
+        "desc": "高",
         "name": "h",
-        "desc": "高"
+        "type": "int?"
       },
       {
-        "type": "int?",
+        "desc": "速度",
         "name": "speed",
-        "desc": "速度"
+        "type": "int?"
       }
     ],
-    "type": "Action",
-    "name": "Patrol"
+    "desc": "在一定范围内巡逻",
+    "name": "Patrol",
+    "type": "Action"
   },
   {
-    "doc": "+ 只能有一个子节点，多个仅执行第一个\n+ 只有当子节点返回失败时，才返回成功，其它情况返回运行中状态\n+ 如果设定了尝试次数，超过指定次数则返回失败\n",
+    "args": [
+      {
+        "desc": "最大循环次数",
+        "name": "maxLoop",
+        "type": "int?"
+      }
+    ],
     "desc": "一直尝试直到子节点返回失败",
-    "args": [
-      {
-        "type": "int?",
-        "name": "maxLoop",
-        "desc": "最大循环次数"
-      }
-    ],
-    "type": "Decorator",
-    "name": "RepeatUntilFailure",
+    "doc": "+ 只能有一个子节点，多个仅执行第一个\n+ 只有当子节点返回失败时，才返回成功，其它情况返回运行中状态\n+ 如果设定了尝试次数，超过指定次数则返回失败\n",
     "input": [
       "最大循环次数?"
-    ]
+    ],
+    "name": "RepeatUntilFailure",
+    "type": "Decorator"
   },
   {
-    "doc": "+ 只能有一个子节点，多个仅执行第一个\n+ 只有当子节点返回成功时，才返回成功，其它情况返回运行中状态\n+ 如果设定了尝试次数，超过指定次数则返回失败\n",
-    "desc": "一直尝试直到子节点返回成功",
     "args": [
       {
-        "type": "int?",
+        "desc": "最大循环次数",
         "name": "maxLoop",
-        "desc": "最大循环次数"
+        "type": "int?"
       }
     ],
-    "type": "Decorator",
-    "name": "RepeatUntilSuccess",
+    "desc": "一直尝试直到子节点返回成功",
+    "doc": "+ 只能有一个子节点，多个仅执行第一个\n+ 只有当子节点返回成功时，才返回成功，其它情况返回运行中状态\n+ 如果设定了尝试次数，超过指定次数则返回失败\n",
     "input": [
       "最大循环次数?"
-    ]
+    ],
+    "name": "RepeatUntilSuccess",
+    "type": "Decorator"
   },
   {
     "desc": "移动到出生点",
-    "type": "Action",
-    "name": "ReturnToSpawn"
+    "name": "ReturnToSpawn",
+    "type": "Action"
   },
   {
-    "doc": "+ 一直往下执行，有子节点返回成功则返回成功，若全部节点返回失败则返回失败\n+ 子节点是或 (OR) 的关系\n",
     "desc": "选择执行",
-    "type": "Composite",
-    "name": "Selector"
+    "doc": "+ 一直往下执行，有子节点返回成功则返回成功，若全部节点返回失败则返回失败\n+ 子节点是或 (OR) 的关系\n",
+    "name": "Selector",
+    "type": "Composite"
   },
   {
-    "doc": "+ 一直往下执行，只有当所有子节点都返回成功, 才返回成功\n+ 子节点是与（AND）的关系\n",
     "desc": "顺序执行",
-    "type": "Composite",
-    "name": "Sequence"
+    "doc": "+ 一直往下执行，只有当所有子节点都返回成功, 才返回成功\n+ 子节点是与（AND）的关系\n",
+    "name": "Sequence",
+    "type": "Composite"
   },
   {
-    "desc": "等待",
     "args": [
       {
-        "type": "int",
+        "desc": "唱歌持续时间",
         "name": "time",
-        "desc": "时间/tick"
+        "type": "int?"
       }
     ],
-    "type": "Action",
-    "name": "Wait"
+    "desc": "唱歌",
+    "name": "Sing",
+    "type": "Action"
+  },
+  {
+    "args": [
+      {
+        "desc": "时间/tick",
+        "name": "time",
+        "type": "int"
+      }
+    ],
+    "desc": "等待",
+    "name": "Wait",
+    "type": "Action"
   }
 ]

@@ -5,7 +5,7 @@ package.path = package.path .. ';behavior3lua/?.lua;behavior3lua/;lualib/?.lua'
 require "adaptLua51"
 local behavior_tree = require "behavior3.behavior_tree"
 local behavior_node = require "behavior3.behavior_node"
-local process = require "behavior3lua.process"
+local process = require "behavior3lua.myGame.process"
 
 
 function BTree:ctor(param)
