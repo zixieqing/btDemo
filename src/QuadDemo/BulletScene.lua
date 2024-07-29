@@ -8,7 +8,7 @@ local Monster = import('.Monster')
 local Bullet = import('.Bullet')
 local QuadTree = import(".spacePartition.QuadTree")
 
-local MONSTER_CNT = 50
+local MONSTER_CNT = 55
 
 function BulletScene:ctor()
     self:enableNodeEvents()
@@ -26,6 +26,15 @@ function BulletScene:ctor()
     end)
     sendBullect:setPosition(cc.p(display.width - 100, display.height - 100))
     self:addChild(sendBullect)
+
+    --test
+    local destoryBullect = ccui.Button:create("quanxinMap/images/Common_Btn_02.png")
+    destoryBullect:setTitleText("销毁子弹")
+    destoryBullect:addClickEventListener(function()
+        table.remove(self.bullets, 1)
+    end)
+    destoryBullect:setPosition(cc.p(display.width - 100, display.height - 200))
+    self:addChild(destoryBullect)
 end
 
 function BulletScene:onEnter()
@@ -36,6 +45,12 @@ function BulletScene:createMonser()
     math.randomseed(os.time())
     for i = 1, MONSTER_CNT do
         local x, y = math.random(0, display.width), math.random(0, display.height)
+        -- if i == 1 then
+        --     x = display.cx - 10
+        --     y = display.cy - 10
+        -- else
+        --     x, y = math.random(0, display.width/2), math.random(0, display.height)
+        -- end
         local monster = Monster.new(x,y)
         self:addChild(monster)
         monster:addTag(i)
@@ -47,11 +62,10 @@ local timeSinceLastBullet = 0
 function BulletScene:onUpdate(dt)
     timeSinceLastBullet = timeSinceLastBullet + dt
     if timeSinceLastBullet > 1 then
-        -- self:spawnBullet()
-        self:check(dt)
+        self:spawnBullet()
         timeSinceLastBullet = 0
     end
-    -- self:check(dt)
+    self:check(dt)
 
 end
 
@@ -97,9 +111,10 @@ function BulletScene:check(dt)
 
                     monster.isAlive = false -- 杀死怪物
                     monster:clear()
+
                     -- table.remove(self.bullets, i) -- 子弹销毁
                     -- bullet:clear()
-                    break
+                    return
                 end
             end
         end
