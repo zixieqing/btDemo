@@ -1,35 +1,57 @@
--- LightEffect.lua
--- Author: xianwx
--- Date: 2018-08-29 15:22:17
--- 模拟真实光照效果
+
+-- 区域修改颜色
+---@class LightEffect
+
+local test_sp = "huli.png"
+
+local shader = {
+    fs = require "app.shader.LightFS",
+    vert = require "app.shader.NormalVS",
+}
+gl.enable(gl.BLEND)
+gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+
 local LightEffect = class("LightEffect")
 
 function LightEffect.getDescText()
-    return "模拟真实光照效果\n请随意点击或者拖动移动光源"
+    return "点击物体发光"
 end
 
 function LightEffect:init(node)
-    -- 光照测试
-    local light = LightEffect:create()
+    node:spTouchUseShader(test_sp, "light_effect")
+end
 
-    -- light:retain()
-    -- light:setLightPos({ x = display.cx + 100, y = display.cy + 100, z = 100 });
-    -- light:setLightCutoffRadius(1000);
-    -- light:setBrightness(2.0);
+function LightEffect:setUniform(glState, time, node)
+   
 
-    -- local sp = EffectSprite:create("foreground_01.png")
+    local tex = node:getTexture()
+    glState:setUniformTexture("u_texture", tex)
 
-    -- -- 参数：光源，法线图，法线图可以通过软件导出
-    -- sp:setEffect(light, "foreground_01_n.png")
+    glState:setUniformFloat("u_brightness", math.random(1,10))
+        
 
-    -- sp:setPosition(display.cx, display.cy)
-    -- node:addChild(sp)
+    -- local customColor = cc.c4f(1.0, 0.0, 0.0, 1.0) -- RGBA
 
-    -- addTouchEvent(node, { endCallback = function (touch)
-    --     light:setLightPos({ x = touch:getLocation().x, y = touch:getLocation().y, z = 100 })
-    -- end, moveCallback = function (touch)
-    --     light:setLightPos({ x = touch:getLocation().x, y = touch:getLocation().y, z = 100 })
-    -- end, moveFix = true })
+end
+
+function LightEffect:resetUniform()
+end
+
+function LightEffect.getVert()
+    return shader.vert
+end
+
+function LightEffect.needRefresh()
+    return true
+end
+
+function LightEffect.getFS()
+    return shader.fs
+end
+
+function LightEffect:resetTime(time)
+    return time + 0.008
 end
 
 return LightEffect
+

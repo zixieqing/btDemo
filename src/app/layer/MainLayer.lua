@@ -3,8 +3,11 @@
 -- Date: 2016-08-28 10:27:13
 -- 主界面
 local effects = {
-    -- "LightEffect",
-    "InvertColorEffect",
+    "WaveEffect",
+    "PixEffect",
+    "LightEffect", 
+    "AreaHSVEffect",
+    "AreaColorEffect",
     "GlowCircleEffect",
     "GrassyEffect",
     "CloudEffect",
@@ -15,6 +18,7 @@ local effects = {
     "FluxayEffect_1",
     "FluxayEffect_2",
     "WaterWaveEffect",
+
 }
 
 local EffectLayer = require "app.layer.EffectLayer"

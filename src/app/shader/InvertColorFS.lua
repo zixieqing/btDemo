@@ -2,6 +2,7 @@
 -- Author: xianwx
 -- Date: 2018-08-28 18:21:17
 --
+--交换颜色值了,rgb 交换了，从而实现了变颜色
 return [[
 #ifdef GL_ES
 precision mediump float;
@@ -17,6 +18,6 @@ void main(void)
 
     // output:
     // set color of the fragment
-    gl_FragColor = vec4(src_color.g, src_color.r, src_color.b, src_color.a);
+    gl_FragColor = vec4(src_color.g, src_color.b, src_color.r, src_color.a);
 }
 ]]
