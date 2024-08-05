@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>D:\work\behaviorFilter\btDemo\learngl\learngl\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>D:\work\behaviorFilter\btDemo\learngl\learngl\include;$(IncludePath)</IncludePath>
+    <IncludePath>D:\work\behaviorFilter\btDemo\learngl\learngl\learngl\resource;D:\work\behaviorFilter\btDemo\learngl\learngl\include;$(IncludePath)</IncludePath>
     <SourcePath>D:\work\behaviorFilter\btDemo\learngl\learngl\include;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="..\include\test\FirstGLWin.cpp" />
     <ClCompile Include="..\include\test\Sanjiaoxing.cpp" />
+    <ClCompile Include="..\include\test\Shader.cpp" />
     <ClCompile Include="..\include\test\test.cpp" />
     <ClCompile Include="..\src\glad.c" />
     <ClCompile Include="..\src\main.cpp" />
@@ -144,6 +145,12 @@
     <ClInclude Include="..\include\test\FirstGLWin.h" />
     <ClInclude Include="..\include\test\Sanjiaoxing.h" />
     <ClInclude Include="..\include\test\test.h" />
+    <ClInclude Include="..\include\test\Shader.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resource\sanjiaoxing.fs" />
+    <None Include="resource\sanjiaoxing.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

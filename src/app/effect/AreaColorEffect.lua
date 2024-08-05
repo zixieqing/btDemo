@@ -31,11 +31,8 @@ function AreaColorEffect:setUniform(glState, time, node)
     local tex = node:getTexture()
     glState:setUniformTexture("u_texture", tex)
 
-    local customColor = cc.c4f(255,33,200, 1.0) -- RGBA，绿色
-    glState:setUniformVec4("u_customColor", customColor)
-        
-
-    -- local customColor = cc.c4f(1.0, 0.0, 0.0, 1.0) -- RGBA
+    local customColor = cc.c4f(1.0, 0.0, 0.0, 1.0) -- RGBA，绿色
+    glState:setUniformVec4("u_customColor", customColor) --这里也是不生效
 
 end
 

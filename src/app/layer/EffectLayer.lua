@@ -47,6 +47,9 @@ function EffectLayer:_setNodeShader(node, shaderName)
     local time = 0
     if not p then
         p = cc.GLProgram:createWithByteArrays(self._effect.getVert(), self._effect.getFS())
+        -- p:bindAttribLocation(cc.ATTRIBUTE_NAME_POSITION,cc.VERTEX_ATTRIB_POSITION)  
+        -- p:bindAttribLocation(cc.ATTRIBUTE_NAME_COLOR,cc.VERTEX_ATTRIB_COLOR)  
+        -- p:bindAttribLocation(cc.ATTRIBUTE_NAME_TEX_COORD,cc.VERTEX_ATTRIB_FLAG_TEX_COORDS)  
         p:link()
         p:updateUniforms()
         p:use()

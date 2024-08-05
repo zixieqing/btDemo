@@ -15,9 +15,10 @@ private:
 
     const char* fragmentShaderSource = "#version 330 core\n"
         "out vec4 FragColor;\n"
+        "uniform vec4 ourColor;\n"
         "void main()\n"
         "{\n"
-        "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+        "   FragColor = ourColor;\n"
         "}\n\0";
     unsigned int vertexShader;
     unsigned int fragmentShader;

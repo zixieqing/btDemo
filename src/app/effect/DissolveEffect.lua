@@ -2,7 +2,7 @@
 -- Author: xianwx
 -- Date: 2018-08-20 17:35:39
 -- 溶解特效demo
-local test_sp = "wcard.png"
+local test_sp = "zhangfei.png"
 local noise_sp = "noisetexture.png"
 
 local shader = {
