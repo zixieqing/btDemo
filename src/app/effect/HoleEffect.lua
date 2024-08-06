@@ -9,7 +9,6 @@ local shader = {
     vert = require "app.shader.NormalVS",
 }
 
-
 local HoleEffect = class("HoleEffect")
 
 function HoleEffect.getDescText()
@@ -24,10 +23,11 @@ function HoleEffect:setUniform(glState, time, node)
     local u_holeCenter = cc.p(0.5, 0.5)
 
     glState:setUniformVec2("u_holeCenter", u_holeCenter)
-    glState:setUniformFloat("u_holeRadius", 0.1)
+    glState:setUniformFloat("u_holeRadius", math.random()/2)
 
     local tex = node:getTexture()
     glState:setUniformTexture("u_texture", tex)
+    glState:setUniformVec2("u_spriteSize", cc.p(160,160))
 end
 
 function HoleEffect:resetUniform()
