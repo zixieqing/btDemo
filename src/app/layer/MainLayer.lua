@@ -3,6 +3,9 @@
 -- Date: 2016-08-28 10:27:13
 -- 主界面
 local effects = {
+    "SkyCloudEffect",
+    "LightingEffect",
+    "PixelCatEffect",
     "HoleEffect",
     "ColorReplaceEffect",
     "XueHuaEffect",
@@ -14,7 +17,7 @@ local effects = {
     "AreaColorEffect",
     "GlowCircleEffect",
     "GrassyEffect",
-    "CloudEffect",
+    "CloudEffect",   
     "FlameEffect",
     "DissolveEffect",
     "SearchLightEffect",
