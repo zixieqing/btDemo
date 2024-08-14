@@ -2,7 +2,10 @@
 
 ### 前期准备
 1. ndk：android-ndk-r16b 
-    设置系统环境变量：NDK_ROOT  
+    设置系统环境变量：
+    1.NDK_ROOT 为 android-ndk-r16b目录  
+    2.Path增加： %NDK_ROOT%
+
     下载地址：https://dl.google.com/android/repository/android-ndk-r16b-windows-x86_64.zip  
 
 2. Android Studio:Android Studio Jellyfish | 2023.3.1  
