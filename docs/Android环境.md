@@ -2,7 +2,7 @@
 
 ### 前期准备
 1. ndk：android-ndk-r16b 
-    设置系统环境变量：
+    设置系统环境变量：  
     1.NDK_ROOT 为 android-ndk-r16b目录  
     2.Path增加： %NDK_ROOT%
 
@@ -44,4 +44,7 @@ build_native.bat
 工程已配置，仅做记录使用  
 Gradle Plugin Version:4.1.1
 Gradle Version:6.7.1
+
+
+### test
 
