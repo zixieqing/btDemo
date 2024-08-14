@@ -29,7 +29,7 @@ function BorderLightEffect:setUniform(glState, time, node)
     glState:setUniformFloat("u_OutlineWidth", 20)
 
     local a_color = cc.c4f(1.0, 0.84, 0.0, 1.0); -- 金黄色，完全不透明
-    glState:setUniformVec4("u_outlineColor", a_color)  --从这里传进去颜色值的不生效？？？而直接写在shader 里的能生效
+    glState:setUniformVec4("a_color", a_color)  --从这里传进去颜色值的不生效？？？而直接写在shader 里的能生效
 
 end
 

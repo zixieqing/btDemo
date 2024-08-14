@@ -3,13 +3,15 @@
 -- Date: 2016-08-28 10:27:13
 -- 主界面
 local effects = {
+    "BorderLightEffect",
+    "BorderEmptyEffect",
+    "starRail.StarRailEffect",
     "SkyCloudEffect",
     "LightingEffect",
     "PixelCatEffect",
     "HoleEffect",
     "ColorReplaceEffect",
     "XueHuaEffect",
-    "BorderLightEffect",
     "WaveEffect",
     "PixEffect",
     "LightEffect", 
@@ -34,6 +36,7 @@ end)
 
 
 function MainLayer:ctor()
+    math.randomseed(os.time() * 30)
     local rBtn = display.newSprite("UI/ArmyDetail/labelArrow.png", 0, 0):addTo(self, 1)
     local lBtn = display.newSprite("UI/ArmyDetail/labelArrow.png", 0, 0):addTo(self, 1)
     rBtn:setAnchorPoint(0.5, 0.5)

@@ -46,20 +46,24 @@ function EffectLayer:_setNodeShader(node, shaderName)
     local p = cache:getGLProgram(shaderName)
     local time = 0
     if not p then
-        p = cc.GLProgram:createWithByteArrays(self._effect.getVert(), self._effect.getFS())
-        -- p:bindAttribLocation(cc.ATTRIBUTE_NAME_POSITION,cc.VERTEX_ATTRIB_POSITION)  
-        -- p:bindAttribLocation(cc.ATTRIBUTE_NAME_COLOR,cc.VERTEX_ATTRIB_COLOR)  
-        -- p:bindAttribLocation(cc.ATTRIBUTE_NAME_TEX_COORD,cc.VERTEX_ATTRIB_FLAG_TEX_COORDS)  
+        p = cc.GLProgram:createWithByteArrays(self._effect.getVert(shaderName), self._effect.getFS(shaderName))
+        p:bindAttribLocation(cc.ATTRIBUTE_NAME_POSITION,cc.VERTEX_ATTRIB_POSITION)  
+        p:bindAttribLocation(cc.ATTRIBUTE_NAME_COLOR,cc.VERTEX_ATTRIB_COLOR)  
+        p:bindAttribLocation(cc.ATTRIBUTE_NAME_TEX_COORD,cc.VERTEX_ATTRIB_FLAG_TEX_COORDS) 
+        if self._effect.bindAttrCustom then
+            self._effect:bindAttrCustom(p, shaderName)
+        end
         p:link()
         p:updateUniforms()
         p:use()
         cache:addGLProgram(p, shaderName)
     end
 
+
     -- set uniform value
     local glState = cc.GLProgramState:getOrCreateWithGLProgram(p)
 
-    self._effect:setUniform(glState, time, node)
+    self._effect:setUniform(glState, time, node, shaderName)
 
     node:setGLProgramState(glState)
 
