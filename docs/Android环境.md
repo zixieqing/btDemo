@@ -3,11 +3,13 @@
 ### 前期准备
 1. ndk：android-ndk-r16b 
     设置系统环境变量：NDK_ROOT  
-    下载地址：https://dl.google.com/android/repository/android-ndk-r16-windows-x86_64.zip  
+    下载地址：https://dl.google.com/android/repository/android-ndk-r16b-windows-x86_64.zip  
 
 2. Android Studio:Android Studio Jellyfish | 2023.3.1  
 
 3. sdk:可直接使用Android Studio 下载：Tools->SDK Manager  
+
+------
 
 
 
@@ -18,14 +20,24 @@ cd 项目目录\client\frameworks\runtime-src
 build_native.bat
 ```
 
+------
+
+
+
 ### Android 应用生成
+
 使用Android Studio 编译运行即可  
 或使用命令行  
 ```shell
   .\gradlew.bat assembleRelease
 ```
 
+------
+
+
+
 ### Gradle 版本：
+
 工程已配置，仅做记录使用  
 Gradle Plugin Version:4.1.1
 Gradle Version:6.7.1
