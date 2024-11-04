@@ -14,7 +14,7 @@ varying vec2 cc_FragTexCoord1;
 uniform vec2 u_sprite_size;
 uniform float u_OutlineWidth;
 
-const int SAMPLES = 6;
+const int SAMPLES = 19;
 varying vec2 v_OutlineSamples[SAMPLES];
 
 void main(){

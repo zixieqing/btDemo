@@ -18,10 +18,12 @@ void main()
     
     // 如果在挖洞范围内，返回透明色
     if (dist < u_holeRadius) {
-        discard; // 丢弃该片段     
+       discard; // 丢弃该片段  
     }
     
     gl_FragColor = color; // 否则显示原始颜色
+    float alpha = smoothstep(u_holeRadius, u_holeRadius + 0.01, dist);
+    gl_FragColor = vec4(color.rgb, 1.0 - alpha); // 透明度控制
 }
 
 ]]
