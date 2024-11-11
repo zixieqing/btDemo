@@ -19,6 +19,7 @@ end
 
 function EffectLayer:spTouchUseShader(spPath, shaderName)
     local sp = display.newSprite(spPath, display.cx, display.cy):addTo(self)
+    sp:setAnchorPoint(cc.p(0,1))
     addTouchEvent(sp, { endCallback = function ()
         self:_setNodeShader(sp, shaderName)
     end, moveFix = true })

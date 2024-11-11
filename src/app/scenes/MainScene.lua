@@ -2,7 +2,7 @@
 local fileUtils = cc.FileUtils:getInstance()
 
 -- 添加资源搜索路径
-fileUtils:addSearchPath("D:/forkGit/client/tl-client/res/shaderDemo/")
+fileUtils:addSearchPath("D:/forkGit/btDemo/res/shaderDemo/")
 
 require "app.UiHelper"
 local MainLayer = require "app.layer.MainLayer"

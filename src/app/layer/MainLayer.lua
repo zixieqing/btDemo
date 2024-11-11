@@ -3,20 +3,23 @@
 -- Date: 2016-08-28 10:27:13
 -- 主界面
 local effects = {
+    "CustomColorHSVEffect",
+    "AreaColorEffect",
+
+    "AreaHSVEffect",
+
     "BorderLightEffect",
     "BorderEmptyEffect",
-    "starRail.StarRailEffect",
-    "SkyCloudEffect",
-    "LightingEffect",
-    "PixelCatEffect",
+    -- "starRail.StarRailEffect",
+    -- "SkyCloudEffect",
+    -- "LightingEffect",
+    -- "PixelCatEffect",
     "HoleEffect",
     "ColorReplaceEffect",
     "XueHuaEffect",
     "WaveEffect",
     "PixEffect",
     "LightEffect", 
-    "AreaHSVEffect",
-    "AreaColorEffect",
     "GlowCircleEffect",
     "GrassyEffect",
     "CloudEffect",   

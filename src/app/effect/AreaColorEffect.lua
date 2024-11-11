@@ -8,8 +8,6 @@ local shader = {
     fs = require "app.shader.ColorAreaFS",
     vert = require "app.shader.NormalVS",
 }
-gl.enable(gl.BLEND)
-gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 
 local AreaColorEffect = class("AreaColorEffect")
 
