@@ -20,23 +20,11 @@ function CustomColorHSVEffect:init(node)
 end
 
 function CustomColorHSVEffect:setUniform(glState, time, node)
-    -- local areaPosition = cc.p(0.0, 0.0)  -- 左上角
-    -- local areaSize = cc.p(0.5, 0.5)      -- 20% x 20% 区域
-
-    -- glState:setUniformVec2("u_areaPosition", areaPosition)
-    -- glState:setUniformVec2("u_areaSize", areaSize)
-
-    -- local tex = node:getTexture()
-    -- glState:setUniformTexture("u_texture", tex)
+    local destColor2 = cc.vec3(math.random(), math.random(), math.random()) 
+    glState:setUniformVec3("dest_color_b", destColor2)
 
     local destColor = cc.vec3(math.random(), math.random(), math.random()) 
-    glState:setUniformVec3("dest_color", destColor)
-
-    -- local customColor = cc.vec3(math.random(),math.random(),math.random())
-    -- glState:setUniformVec3("u_customColor", customColor)
-
-    -- 设置新的 HSV 值（例如，增加色相，保持饱和度和明度）
-
+    glState:setUniformVec3("dest_color_gb", destColor)
 
 end
 
