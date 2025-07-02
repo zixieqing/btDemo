@@ -3,6 +3,10 @@
 -- Date: 2016-08-28 10:27:13
 -- 主界面
 local effects = {
+    "OutLineEffect",
+
+    "SearchLightEffect",
+
     "CustomColorHSVEffect",
     "AreaColorEffect",
 
@@ -11,7 +15,6 @@ local effects = {
     "BorderLightEffect",
     "BorderEmptyEffect",
     -- "starRail.StarRailEffect",
-    -- "SkyCloudEffect",
     -- "LightingEffect",
     -- "PixelCatEffect",
     "HoleEffect",
@@ -25,7 +28,6 @@ local effects = {
     "CloudEffect",   
     "FlameEffect",
     "DissolveEffect",
-    "SearchLightEffect",
     "TransferEffect",
     "FluxayEffect_1",
     "FluxayEffect_2",
@@ -36,7 +38,7 @@ local EffectLayer = require "app.layer.EffectLayer"
 local MainLayer = class("MainLayer", function ()
     return display.newLayer()
 end)
-
+local spriteFrameCache = cc.SpriteFrameCache:getInstance()
 
 function MainLayer:ctor()
     math.randomseed(os.time() * 30)
@@ -61,6 +63,20 @@ function MainLayer:ctor()
         local idx = self._idx - 1
         idx = idx < 1 and max or idx
         self:_displayLayer(idx)
+
+        -- cc.SpriteFrameCache:getInstance():addSpriteFrames("model_2_1_0_10_1.plist", "model_2_1_0_10_1.pvr")
+
+        -- local sprite = display.newSprite()
+        -- sprite:setPosition(display.cx + 100, display.cy)  -- 设置为屏幕中心
+        -- self:addChild(sprite, 999)
+        -- local newFrame = cc.SpriteFrameCache:getInstance():getSpriteFrame("model_2_1_0_10_0.png")  -- 替换为新帧名
+        -- print("newFrame", newFrame)
+        -- if not newFrame then
+        --     print("newFrame is nil")
+        --     return
+        -- end
+        -- sprite:setSpriteFrame(newFrame)  -- 设置新的精灵帧
+
     end, moveFix = true })
 
     self:_displayLayer(1)
@@ -81,6 +97,8 @@ function MainLayer:_displayLayer(idx)
     self:addChild(layer)
 
     self._layer = layer
+
+
 end
 
 return MainLayer

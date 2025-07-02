@@ -12,9 +12,11 @@ function EffectLayer:ctor(effectName)
     local label = createSimpleLabel({ text = effect.getDescText() }):addTo(self, 1)
     label:setAnchorPoint(0.5, 0.5)
     label:setPosition(display.cx, display.height - label:getContentSize().height / 2)
+   
 
     self._effect = effect
     self._effect:init(self)
+
 end
 
 function EffectLayer:spTouchUseShader(spPath, shaderName)
@@ -22,6 +24,20 @@ function EffectLayer:spTouchUseShader(spPath, shaderName)
     sp:setAnchorPoint(cc.p(0.5,0.6))
     addTouchEvent(sp, { endCallback = function ()
         self:_setNodeShader(sp, shaderName)
+
+        -- 创建精灵
+        local sprite = display.newSprite()
+        sprite:setPosition(display.cx + 100, display.cy)  -- 设置为屏幕中心
+        self:addChild(sprite, 999)
+        local newFrame = cc.SpriteFrameCache:getInstance():getSpriteFrame("model_2_1_0_10_0.png")  -- 替换为新帧名
+        print("newFrame", newFrame)
+        if not newFrame then
+            print("newFrame is nil")
+            return
+        end
+        sprite:setSpriteFrame(newFrame)  -- 设置新的精灵帧
+
+
     end, moveFix = true })
     return sp
 end

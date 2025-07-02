@@ -24,7 +24,19 @@ return [[
         vec2 s = 0.15 * resolution.xy;
         // 点积取比例
         float r = dot(d, d)/dot(s,s);
-        fragColor =  tex * (1.08 - r);
+        //fragColor =  tex * (1.5 - r);
+        float opacity = 0.02;
+
+         // 计算最终颜色
+        if (r < 1.0) {
+            // 在光圈内，显示正常纹理颜色
+            fragColor = tex * (1.1- r);
+            //fragColor = tex * (1.08 - r) * opacity + tex * (1.0 - opacity);
+        } else {
+            // 在光圈外，设置为透明度
+            fragColor = vec4(tex.rgb, tex.a * opacity); // 根据透明度调整
+        }
+        //fragColor = tex * (1.08 - r) * opacity + tex * (1.0 - opacity);
     }
     void main()
     {

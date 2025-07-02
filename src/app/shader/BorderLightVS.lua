@@ -14,13 +14,13 @@ varying vec2 cc_FragTexCoord1;
 uniform vec2 u_sprite_size;
 uniform float u_OutlineWidth;
 
-const int SAMPLES = 19;
+const int SAMPLES = 31;
 varying vec2 v_OutlineSamples[SAMPLES];
 
 void main(){
     gl_Position = CC_PMatrix * a_position;
 
-    vec4 a_color = vec4(1.0, 0.84, 0.0, 1.0); // 金黄色，完全不透明
+    vec4 a_color = vec4(1.0, 0.2, 0.0, 1.0); // 金黄色，完全不透明
 
     cc_FragColor = clamp(a_color, 0.0, 1.0);
     cc_FragTexCoord1 = a_texCoord;

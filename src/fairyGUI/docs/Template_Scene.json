@@ -1,0 +1,42 @@
+{
+    "TemplateScene": {
+        "prefix": "TemplateScene",
+        "body": [
+            "-- 【${3:模板场景}】",
+            "local DemoScene = require(\"fairyGUI.views.DemoScene\")",
+            "",
+            "local ${1:TemplateScene} = class(\"${1:TemplateScene}\", DemoScene)",
+            "",
+            "function ${1:TemplateScene}:ctor()",
+            "    ${1:TemplateScene}.super.ctor(self)",
+            "end",
+            "",
+            "function ${1:TemplateScene}:initVars()",
+            "    ",
+            "end",
+            "",
+            "function ${1:TemplateScene}:continueInit()",
+            "    fgui.UIPackage:addPackage(\"fairyGUIDemo/${2:Bag}\")",
+            "    local _view = fgui.UIPackage:createObject(\"${2:Bag}\", \"Main\")",
+            "    self._groot:addChild(_view)",
+            "end",
+            "",
+            "function ${1:TemplateScene}:onExit()",
+            "    print(\"${1:TemplateScene}:onExit()\")",
+            "    fgui.UIPackage:removePackage(\"fairyGUIDemo/${2:Bag}\")",
+            "    ${1:TemplateScene}.super.onExit(self)",
+            "end",
+            "",
+            "function ${1:TemplateScene}:onEnter()",
+            "    print(\"${1:TemplateScene}:onEnter()\")",
+            "end",
+            "",
+            "function ${1:TemplateScene}:onClear()",
+            "    print(\"${1:TemplateScene}:onClear()\")",
+            "end",
+            "",
+            "return ${1:TemplateScene}"
+        ],
+        "description": "Lua code template for a 【模板场景】"
+    }
+}

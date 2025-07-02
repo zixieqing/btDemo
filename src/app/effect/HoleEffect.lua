@@ -27,7 +27,8 @@ function HoleEffect:setUniform(glState, time, node)
 
     local tex = node:getTexture()
     glState:setUniformTexture("u_texture", tex)
-    glState:setUniformVec2("u_spriteSize", cc.p(160,160))
+    local size = node:getContentSize()
+    glState:setUniformVec2("u_spriteSize", cc.p(size.width, size.height))
 end
 
 function HoleEffect:resetUniform()

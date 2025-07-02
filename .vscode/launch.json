@@ -1,0 +1,22 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "emmylua_launch",
+            "request": "launch",
+            "name": "启动并附加程序",
+            "program": "D:/forkGit/btDemo/test.exe",
+            "workingDir": "D:/forkGit/btDemo/",
+            "arguments": [
+                "-workdir ${workspaceRoot}/src",
+                "-file  src/main.lua",
+                // "-resolution 1024x768"
+                // "-resolution 2272x1240"
+            ],
+            "newWindow": false,
+        }
+    ]
+}

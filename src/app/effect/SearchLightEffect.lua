@@ -2,7 +2,7 @@
 -- Author: xianwx
 -- Date: 2018-08-21 17:13:51
 -- 战争迷雾效果
-local test_sp = "monster.jpg"
+local test_sp = "game_bg.jpg"
 
 local shader = {
     fs = require "app.shader.SearchLightFS",
@@ -24,6 +24,7 @@ function SearchLightEffect:init(node)
         end
         local touchPos = touch:getLocation()
         local nodeP = cc.p(sp:convertToNodeSpace(cc.p(touchPos)))
+        print("nodeP",nodeP.x, nodeP.y)
         self._glState:setUniformVec2("mouse", nodeP)
     end
 
@@ -42,7 +43,7 @@ function SearchLightEffect:setUniform(glState, _, sp)
 
     -- set uniform value
     glState:setUniformVec2("resolution", { x = size.width, y = size.height })
-    glState:setUniformVec2("mouse", { x = 150, y = 40 }) -- 随便写个初始位置
+    glState:setUniformVec2("mouse", { x = display.cx, y = display.cy }) -- 随便写个初始位置
 end
 
 function SearchLightEffect.needRefresh()
